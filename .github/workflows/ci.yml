@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        config:
+          - os: "ubuntu-latest"
+            arch: "x64"
+          - os: "ubuntu-latest"
+            arch: "arm"
+          - os: "ubuntu-latest"
+            arch: "arm64"
+          - os: "ubuntu-latest"
+            arch: "ppc64le"
+          - os: "ubuntu-latest"
+            arch: "s390x"
+          - os: "macos-latest"
+            arch: "x64"
+          - os: "macos-latest"
+            arch: "arm64"
+          - os: "windows-latest"
+            arch: "x64"
+          - os: "windows-latest"
+            arch: "x86"
+
+    steps:
+      - name: "Print OS and architecture (Windows)"
+        run: systeminfo | findstr /B /C:"OS Name" /C:"OS Version" /C:"System Type"
+        if: ${{ fromJSON(matrix.config.os == 'windows-latest') }}
+
+        
+      - name: "Print OS and architecture (Else)"
+        run: uname -a
+        if: ${{ fromJSON(matrix.config.os != 'windows-latest') }}
+
+          
